@@ -27,3 +27,12 @@ nav {
 		border-bottom-color: oklch(245% 70% 5);
 	}
 }
+form {
+	font: inherit;
+	display: block;
+	width: 100%;
+	box-sizing: border-box
+	label {
+		margin-block: 10px;
+	}
+}
