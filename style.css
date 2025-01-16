@@ -3,3 +3,14 @@ body {
 	max-width: 50ch;
 	margin-inline: auto;
 }
+nav {
+	display: flex;
+	text-decoration: none;
+	color: inherit;
+	text-align: center;
+	padding: 0.5em;
+	margin-bottom: 10px;
+	a {
+		flex: 1;
+	}
+}
