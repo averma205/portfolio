@@ -5,10 +5,4 @@ body {
 	font: 100%/0.105 system-ui;
 	max-width: 50ch;
 	margin-inline: auto;
-	padding-top: 10ch;
-  	padding-right: 10ch;
-  	padding-bottom: 10ch;
-	padding-left: 10ch;
-	display: contents;
-	
 }
