@@ -1,5 +1,5 @@
 html {
-	--color-accent: oklch(245% 70% 5)
+	accent-color: oklch(245% 70% 5)
 }
 body {
 	font: 100%/1.5 system-ui;
@@ -11,12 +11,17 @@ nav {
 	text-decoration: none;
 	color: inherit;
 	text-align: center;
-	bottom-style: solid;
 	padding: 0.5em;
 	margin-bottom: 1px;
-	border-bottom-width: 1px;
-	border-bottom-color: oklch(80% 3% 200);
 	a {
 		flex: 1;
+		bottom-style: solid;
+		border-bottom-width: 1px;
+		border-bottom-color: oklch(80% 3% 200);
+	}
+	a:hover {
+		bottom-style: solid;
+		border-bottom-width: 1px;
+		border-bottom-color: oklch(245% 70% 5);
 	}
 }
