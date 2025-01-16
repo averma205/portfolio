@@ -12,8 +12,8 @@ nav {
 	color: inherit;
 	text-align: center;
 	padding: 0.5em;
+	border-bottom-style: solid;
 	margin-bottom: 1px;
-	bottom-style: solid;
 	border-bottom-color: oklch(80% 3% 200);
 	border-bottom-width: 1px;
 	a {
@@ -28,11 +28,12 @@ nav {
 	}
 }
 form {
-	font: inherit;
-	display: block;
 	width: 100%;
-	box-sizing: border-box
+	font: inherit;
+	display: grid;
+	box-sizing: border-box;
+	grid-template-columns: auto 1fr;
 	label {
-		margin-block: 10px;
+		margin-block: 1px;
 	}
 }
