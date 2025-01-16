@@ -15,6 +15,7 @@ nav {
 	margin-bottom: 1px;
 	a {
 		flex: 1;
+		text-decoration: none;
 		bottom-style: solid;
 		border-bottom-width: 1px;
 		border-bottom-color: oklch(80% 3% 200);
