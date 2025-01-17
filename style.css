@@ -1,5 +1,5 @@
 html {
-	accent-color: oklch(245% 70% 5)
+	accent-color: #2f78ed;
 }
 body {
 	font: 100%/1.5 system-ui;
@@ -8,32 +8,40 @@ body {
 }
 nav {
 	display: flex;
-	text-decoration: none;
-	color: inherit;
 	text-align: center;
-	padding: 0.5em;
 	border-bottom-style: solid;
-	margin-bottom: 1px;
-	border-bottom-color: oklch(80% 3% 200);
-	border-bottom-width: 1px;
+	margin-bottom: 15px;
 	a {
+		text-decoration: none;
+		color: inherit;
 		flex: 1;
 	}
 	a:current {
+		border-bottom-style: solid;
 		border-bottom-width: 0.4em;
+		border-bottom-color: oklch(80% 3% 200);
 	} 
 	a:hover {
+		background-color: #d9e7ff;
+		border-bottom-style: solid;
 		border-bottom-width: 0.4em;
-		border-bottom-color: oklch(245% 70% 5);
+		border-bottom-color: #2f78ed;
 	}
 }
 form {
+	box-sizing: border-box;
 	width: 100%;
 	font: inherit;
 	display: grid;
-	box-sizing: border-box;
-	grid-template-columns: auto 1fr;
+	grid-template-columns: subgrid;
+	grid-column: 1 / -1;
+	gap: 1em;
 	label {
-		margin-block: 1px;
+		margin-block: 10px;
 	}
+}
+.projects {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
+	
 }
