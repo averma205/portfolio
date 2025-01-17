@@ -17,10 +17,11 @@ nav {
 		flex: 1;
 	}
 	a:current {
+		background-color: #fbb2b2;
 		border-bottom-style: solid;
 		border-bottom-width: 0.4em;
 		border-bottom-color: oklch(80% 3% 200);
-	} 
+	}
 	a:hover {
 		background-color: #d9e7ff;
 		border-bottom-style: solid;
@@ -43,5 +44,24 @@ form {
 .projects {
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(15em, 1fr));
-	
+	gap: 1em;
+	grid-template-rows: subgrid;
+	article {
+		grid-row: span 3;
+	}
+	h2 {
+		margin: 0;
+		text-wrap: balance;
+	}
+}
+h1 {
+	font-size: 400%;
+}
+:is(h1, h2, h3, h4, h5, h6) {
+	line-height: 1.1;
+	text-wrap: balance;
+}
+img {
+	width: 100%;
+	height: auto;
 }
