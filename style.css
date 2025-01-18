@@ -5,6 +5,7 @@ body {
 	font: 100%/1.5 system-ui;
 	max-width: 100ch;
 	margin-inline: auto;
+	padding: 100px;
 }
 nav {
 	display: flex;
@@ -58,7 +59,7 @@ h1 {
 	font-size: 400%;
 }
 h2 {
-	color: #3985ff;
+	color: #1b72ff;
 }
 :is(h1, h2, h3, h4, h5, h6) {
 	line-height: 1.1;
