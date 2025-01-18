@@ -11,22 +11,22 @@ nav {
 	text-align: center;
 	border-bottom-style: solid;
 	margin-bottom: 15px;
+	border-bottom-color: oklch(80% 3% 200);
 	a {
 		text-decoration: none;
 		color: inherit;
 		flex: 1;
 	}
-	a:current {
-		background-color: #fbb2b2;
+	a.current {
 		border-bottom-style: solid;
-		border-bottom-width: 0.4em;
+		border-bottom-width: 0.2em;
 		border-bottom-color: oklch(80% 3% 200);
 	}
 	a:hover {
-		background-color: #d9e7ff;
+		background-color: #e6efff;
 		border-bottom-style: solid;
-		border-bottom-width: 0.4em;
-		border-bottom-color: #2f78ed;
+		border-bottom-width: 0.2em;
+		border-bottom-color: #3985ff;
 	}
 }
 form {
@@ -56,6 +56,9 @@ form {
 }
 h1 {
 	font-size: 400%;
+}
+h2 {
+	color: #3985ff;
 }
 :is(h1, h2, h3, h4, h5, h6) {
 	line-height: 1.1;
