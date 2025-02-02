@@ -85,3 +85,16 @@ img {
 	top: 1rem;
 	right: 1rem;
 }
+
+dl {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	dt {
+		grid-row: 1;
+	}
+	dd {
+		grid-row: 2;
+		font-size: 40px;
+	}
+}
