@@ -98,3 +98,59 @@ dl {
 		font-size: 40px;
 	}
 }
+
+#projects-plot {
+	max-width: 20em;
+	margin-block: 2em;
+	overflow: visible;
+}
+
+.legend {
+	display: grid;
+	background-color: var(--color);
+	grid-template-columns: repeat(auto-fill, minmax(9em, 1fr));
+	align-items: center;
+	border: 1px solid #ccc;
+	padding: 2em;
+	margin: 2em;
+	flex: 1;
+	gap: 2em;	
+	li {
+		display: flex;
+		align-items: center;
+		gap: 1em;
+	}
+}
+.swatch {
+	display: inline-block;
+	aspect-ratio: 1 / 1;
+	width: 1rem;
+	height: 1rem;
+	background-color: var(--color);
+	border-radius: 50%;
+	border: 1px;
+}
+span {
+	display: inline-block;
+}
+.container {
+	display: flex;
+	align-items: center;
+	gap: 2em;
+}
+&:has(path:hover) {
+	path:not(:hover) {
+	  opacity: 0.5;
+	}
+}
+path {
+	transition: 300ms;
+	cursor: pointer;
+}
+.selected {
+	--color: oklch(60% 45% 0) !important;
+  
+	&:is(path) {
+	  fill: var(--color);
+	}
+}
