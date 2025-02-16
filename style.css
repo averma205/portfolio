@@ -161,7 +161,9 @@ circle {
 	transform-box: fill-box;
 	fill-opacity: 0.7;
   }
-  
+  circle.selected {
+	fill: #ff6b6b;
+  }
   circle:hover {
 	transform: scale(1.5);
 }
@@ -176,10 +178,19 @@ dl.info {
     opacity: 0;
     visibility: hidden;
 }
-
+dl.stats {
+	display: grid;
+	dt {
+		text-align: center;
+		font-size: 20px;
+	}
+}
 .gridlines {
 	stroke-width: 0.5;
+	opacity: 0.25;
 }
+
+
 
 @keyframes marching-ants {
 	to {

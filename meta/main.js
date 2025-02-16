@@ -17,6 +17,8 @@ async function loadData() {
     }));
     displayStats();
     createScatterplot()
+    brushSelector();
+    updateTooltipVisibility(false);
 }
 
 function processCommits() {
@@ -69,11 +71,11 @@ function displayStats() {
 
     // Add longest line
     dl.append('dt').text('Longest line');
-    dl.append('dd').text();
+    dl.append('dd').text(d3.max(data, d => d.length));
   
     // Add number of files
     dl.append('dt').html('Number of files');
-    dl.append('dd').text();
+    dl.append('dd').text(d3.rollup(data, (D) => D.length, (d) => d.file).size);
 }
 
 const fileLengths = d3.rollups(
@@ -108,11 +110,11 @@ function createScatterplot() {
 
     const dots = svg.append('g').attr('class', 'dots');
     const [minLines, maxLines] = d3.extent(commits, (d) => d.totalLines);
-    const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([2, 30]); // adjust these values based on your experimentation
+    const rScale = d3.scaleSqrt().domain([minLines, maxLines]).range([4, 20]); // adjust these values based on your experimentation
     const sortedCommits = d3.sort(commits, (d) => -d.totalLines);
     
     dots
-        .selectAll('circle')
+        .selectAll('circle').data(sortedCommits).join('circle')
         .data(commits)
         .join('circle')
         .attr('cx', (d) => xScale(d.datetime))
@@ -130,8 +132,7 @@ function createScatterplot() {
             d3.select(event.currentTarget).style('fill-opacity', 0.7); // Restore transparency
             updateTooltipContent({});
             updateTooltipVisibility(false)
-        })
-        .selectAll('circle').data(sortedCommits).join('circle');
+        });
 
     const margin = { top: 10, right: 10, bottom: 30, left: 20 };
     const usableArea = {
@@ -144,8 +145,10 @@ function createScatterplot() {
     };
     
     // Update scales with new ranges
-    xScale.range([usableArea.left, usableArea.right]);
-    yScale.range([usableArea.bottom, usableArea.top]);
+    // xScale.range([usableArea.left, usableArea.right]);
+    // yScale.range([usableArea.bottom, usableArea.top]);
+    xScale.range([0, width]);
+    yScale.range([0, height]);
 
     // Create the axes
     const xAxis = d3.axisBottom(xScale);
@@ -156,13 +159,13 @@ function createScatterplot() {
     // Add X axis
     svg
     .append('g')
-    .attr('transform', `translate(0, ${usableArea.bottom})`)
+    .attr('transform', `translate(0, 600)`)
     .call(xAxis);
 
     // Add Y axis
     svg
     .append('g')
-    .attr('transform', `translate(${usableArea.left}, 0)`)
+    .attr('transform', `translate(0, 0)`)
     .call(yAxis);
 
 
@@ -170,10 +173,10 @@ function createScatterplot() {
     const gridlines = svg
     .append('g')
     .attr('class', 'gridlines')
-    .attr('transform', `translate(${usableArea.left}, 0)`);
+    .attr('transform', `translate(0, 0)`);
 
     // Create gridlines as an axis with no labels and full-width ticks
-    gridlines.call(d3.axisLeft(yScale).tickFormat('').tickSize(-usableArea.width));
+    gridlines.call(d3.axisLeft(yScale).tickFormat('').tickSize(-width));
 }
 
 function updateTooltipContent(commit) {
@@ -191,6 +194,18 @@ function updateTooltipContent(commit) {
 function updateTooltipVisibility(isVisible) {
     const tooltip = document.getElementById('commit-tooltip');
     tooltip.hidden = !isVisible;
+    if (!isVisible) {
+        tooltip.innerHTML = 
+        `<dl id="commit-tooltip" class="info tooltip">
+            <dt>Commit</dt>
+            <dd>
+                <a href="" id="commit-link" target="_blank"></a>
+            </dd>
+      
+            <dt>Date</dt>
+            <dd id="commit-date"></dd>
+        </dl>`
+    }
 }
 function updateTooltipPosition(event) {
     const tooltip = document.getElementById('commit-tooltip');
@@ -200,6 +215,86 @@ function updateTooltipPosition(event) {
 
 function brushSelector() {
     const svg = document.querySelector('svg');
-    d3.select(svg).call(d3.brush());
+    d3.select(svg).call(d3.brush().on('start brush end', brushed));
     d3.select(svg).selectAll('.dots, .overlay ~ *').raise();
+}
+
+let brushSelection = null;
+
+function brushed(event) {
+    brushSelection = event.selection;
+    updateSelection();
+    updateSelectionCount();
+    updateLanguageBreakdown();
+}
+
+function isCommitSelected(commit) {
+    const width = 1000;
+    const height = 600;
+    const xScale = d3
+    .scaleTime()
+    .domain(d3.extent(commits, (d) => d.datetime))
+    .range([0, width])
+    .nice();
+    const yScale = d3.scaleLinear().domain([0, 24]).range([height, 0]);
+
+    if (!brushSelection) return false;
+    const min = { x: brushSelection[0][0], y: brushSelection[0][1] };
+    const max = { x: brushSelection[1][0], y: brushSelection[1][1] };
+    const x = xScale(commit.date); const y = yScale(commit.hourFrac);
+    return x >= min.x && x <= max.x && y >= min.y && y <= max.y;
+} 
+
+function updateSelection() {
+    // Update visual state of dots based on selection
+    d3.selectAll('circle').classed('selected', (d) => isCommitSelected(d));
+}
+
+function updateSelectionCount() {
+    const selectedCommits = brushSelection
+      ? commits.filter(isCommitSelected)
+      : [];
+  
+    const countElement = document.getElementById('selection-count');
+    countElement.textContent = `${
+      selectedCommits.length || 'No'
+    } commits selected`;
+  
+    return selectedCommits;
+}
+
+function updateLanguageBreakdown() {
+    const selectedCommits = brushSelection
+      ? commits.filter(isCommitSelected)
+      : [];
+    const container = document.getElementById('language-breakdown');
+  
+    if (selectedCommits.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+    const requiredCommits = selectedCommits.length ? selectedCommits : commits;
+    const lines = requiredCommits.flatMap((d) => d.lines);
+  
+    // Use d3.rollup to count lines per language
+    const breakdown = d3.rollup(
+      lines,
+      (v) => v.length,
+      (d) => d.type
+    );
+  
+    // Update DOM with breakdown
+    container.innerHTML = '';
+  
+    for (const [language, count] of breakdown) {
+      const proportion = count / lines.length;
+      const formatted = d3.format('.1~%')(proportion);
+  
+      container.innerHTML += `
+              <dt>${language}</dt>
+              <dd>${count} lines (${formatted})</dd>
+          `;
+    }
+  
+    return breakdown;
 }
